@@ -59,33 +59,56 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
     std::string value =
       std::to_string(static_cast<long double>(counter_itr->second));
 
-    std::string value_per_second =
-      std::to_string(static_cast<long double>(ledger.counter_rates.at(key)));
+    if (::config->repeater_raw) {
+      this->send(key + ":" + value + "|c");
+    } else {
+      std::string value_per_second =
+        std::to_string(static_cast<long double>(ledger.counter_rates.at(key)));
 
-    this->send(key + ".rate:" + value_per_second + "|c\n" +
-               key + ".count:" + value + "|c");
+      this->send(key + ".rate:" + value_per_second + "|c\n" +
+                 key + ".count:" + value + "|c");
+    }
 
   }
 
   // timers
-  for (auto timer_itr = ledger.timer_data.cbegin();
-      timer_itr != ledger.timer_data.cend();
-      ++timer_itr) {
-    std::string key = timer_itr->first;
-    std::string out = "";
-
-    for (auto timer_data_itr = timer_itr->second.cbegin();
-        timer_data_itr != timer_itr->second.cend();
-        ++timer_data_itr) {
-      std::string timer_data_key = timer_data_itr->first;
-
-      std::string value = std::to_string(
-        static_cast<long double>(timer_data_itr->second));
-
-      out += key + "." + timer_data_key + ":" + value + "|ms";
+  if (::config->repeater_raw) {
+    for (auto timer_key_value_pair_itr = ledger.timers.cbegin();
+         timer_key_value_pair_itr != ledger.timers.cend();
+         ++timer_key_value_pair_itr) {
+      std::string key = timer_key_value_pair_itr->first;
+      std::string out = "";
+      if (key.length() > 0) {
+        std::vector<double> values(timer_key_value_pair_itr->second);
+        for (auto value_itr = values.cbegin();
+          value_itr != values.cend();
+          ++value_itr) {
+          std::string value = std::to_string(static_cast<long double>(*value_itr));
+          out += key + ":" + value + "|ms\n";
+        }
+        this->send(out);
+      }
     }
-    out.erase(out.end() - 1);
-    this->send(out);
+  } else {
+    for (auto timer_itr = ledger.timer_data.cbegin();
+        timer_itr != ledger.timer_data.cend();
+        ++timer_itr) {
+      std::string key = timer_itr->first;
+      std::string out = "";
+
+      for (auto timer_data_itr = timer_itr->second.cbegin();
+          timer_data_itr != timer_itr->second.cend();
+          ++timer_data_itr) {
+        std::string timer_data_key = timer_data_itr->first;
+
+        std::string value = std::to_string(
+          static_cast<long double>(timer_data_itr->second));
+
+        out += key + "." + timer_data_key + ":" + value + "|ms";
+      }
+      out.erase(out.end() - 1);
+      this->send(out);
+    }
   }
 
   // gauges

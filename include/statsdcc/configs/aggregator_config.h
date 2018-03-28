@@ -33,6 +33,8 @@ class AggregatorConfig : public Config {
 
   std::string prefix;
 
+  bool repeater_raw;
+
   int frequency;       // default: 10
 
   std::vector<int> percentiles;  // default: [90]

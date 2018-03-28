@@ -142,6 +142,10 @@ Example configuration files are in [statsdcc/etc](Logger)
 		}
 	]
 	```
+-   `repeater_raw`: When using a repeater should raw metrics be send instead of aggregates.  Defaults to false.
+	```
+    "repeater_raw": false
+    ```
 
 ### Proxy Configuration Variables
 

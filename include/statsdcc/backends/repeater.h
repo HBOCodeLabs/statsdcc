@@ -41,7 +41,6 @@ class Repeater: public statsdcc::backends::Backend {
  private:
   inline void send(std::string metric) {
     for (unsigned int i = 0; i < this->destinations.size(); ++i) {
-      metric = metric.substr(0, metric.size()-1);
       net::wrapper::sendto(this->sockfd,
         static_cast<const void*>(metric.c_str()),
         metric.length(),
