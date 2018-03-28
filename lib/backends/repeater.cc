@@ -77,12 +77,13 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
          timer_key_value_pair_itr != ledger.timers.cend();
          ++timer_key_value_pair_itr) {
       std::string key = timer_key_value_pair_itr->first;
+      std::string out = "";
       if (key.length() > 0) {
         std::vector<double> values(timer_key_value_pair_itr->second);
         for (auto value_itr = values.cbegin();
           value_itr != values.cend();
           ++value_itr) {
-          std::string value = std::to_string(static_cast<long double>(value_itr));
+          std::string value = std::to_string(static_cast<long double>(*value_itr));
           out += key + ":" + value + "|ms\n";
         }
         this->send(out);

@@ -16,7 +16,7 @@ AggregatorConfig::AggregatorConfig(const Json::Value& json)
   }
 
   this->frequency = json.get("frequency", 10).asInt();
-  this->repeater_raw = json.get("repeater_raw", false);
+  this->repeater_raw = json.get("repeater_raw", false).asBool();
 
   Json::Value ps = json["percentiles"];
   if (ps.size() == 0) {

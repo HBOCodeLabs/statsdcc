@@ -33,7 +33,7 @@ class AggregatorConfig : public Config {
 
   std::string prefix;
 
-  std::string repeater_raw;
+  bool repeater_raw;
 
   int frequency;       // default: 10
 
