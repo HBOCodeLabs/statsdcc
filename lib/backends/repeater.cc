@@ -59,7 +59,7 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
     std::string value =
       std::to_string(static_cast<long double>(counter_itr->second));
 
-    if (config->repeater_raw) {
+    if (::config->repeater_raw) {
       this->send(key + ":" + value + "|c");
     } else {
       std::string value_per_second =
@@ -72,7 +72,7 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
   }
 
   // timers
-  if (config->repeater_raw) {
+  if (::config->repeater_raw) {
     for (auto timer_key_value_pair_itr = ledger.timers.cbegin();
          timer_key_value_pair_itr != ledger.timers.cend();
          ++timer_key_value_pair_itr) {
