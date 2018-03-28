@@ -134,6 +134,7 @@ Example configuration files are in [statsdcc/etc](Logger)
 
 -	`repeaters`: Using repeaters you can flush the aggregates to another statsdcc-aggregator or statsdcc-proxy.
 
+	`repeater_raw`: When using a repeater should raw metrics be send instead of aggregates.  Defaults to false.
 	```
 	"repeaters": [
 		{
