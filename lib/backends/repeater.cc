@@ -78,15 +78,25 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
          ++timer_key_value_pair_itr) {
       std::string key = timer_key_value_pair_itr->first;
       std::string out = "";
+      int out_limit = 20
+      int out_counter = 0
       if (key.length() > 0) {
         std::vector<double> values(timer_key_value_pair_itr->second);
         for (auto value_itr = values.cbegin();
-          value_itr != values.cend();
-          ++value_itr) {
+            value_itr != values.cend();
+            ++value_itr) {
+          out_counter++;
           std::string value = std::to_string(static_cast<long double>(*value_itr));
           out += key + ":" + value + "|ms\n";
+          if (out_counter >= out_limit) {
+            this->send(out);
+            out = "";
+            out_counter = 0;
+          }
         }
-        this->send(out);
+        if(! out.empty()) {
+            this->send(out);
+        }
       }
     }
   } else {
