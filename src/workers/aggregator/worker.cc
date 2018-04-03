@@ -44,15 +44,6 @@ void Worker::process() {
 
   int count = 0;
   while (!this->done) {
-    if (!this->work_queue.pop(metric_ptr)) {
-      // sleeping and polling is better performant than conditional variables
-      std::this_thread::sleep_for(std::chrono::nanoseconds(10));
-      continue;
-    }
-
-    metric = std::string(metric_ptr);
-    tc_free(metric_ptr);
-
     if (this->interrupt_flag == true) {
       // process and flush ledger
       this->current_ledger->process();
@@ -76,6 +67,15 @@ void Worker::process() {
       count = 0;
       this->interrupt_flag = false;
     }
+
+    if (!this->work_queue.pop(metric_ptr)) {
+      // sleeping and polling is better performant than conditional variables
+      std::this_thread::sleep_for(std::chrono::nanoseconds(10));
+      continue;
+    }
+
+    metric = std::string(metric_ptr);
+    tc_free(metric_ptr);
 
     this->current_ledger->buffer(metric);
     ++count;
