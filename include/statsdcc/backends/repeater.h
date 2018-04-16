@@ -55,6 +55,9 @@ class Repeater: public statsdcc::backends::Backend {
 
   // destinations
   std::vector<sockaddr_in> destinations;
+
+  // prefix for stats
+  std::string prefix_stats;
 };
 
 }  // namespace backends
