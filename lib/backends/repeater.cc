@@ -155,10 +155,10 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
   // Statsd metrics
   this->send(
     this->prefix_stats + ".metrics_processed:" +
-    std::to_string(static_cast<long long int>(ledger.statsd_metrics['metrics_processed'])) + "|c")
+    std::to_string(static_cast<long long int>(ledger.statsd_metrics["metrics_processed"])) + "|c")
   this->send(
     this->prefix_stats + ".processing_time:" +
-    std::to_string(static_cast<long long int>(ledger.statsd_metrics['processing_time'])) + "|ms")
+    std::to_string(static_cast<long long int>(ledger.statsd_metrics["processing_time"])) + "|ms")
 
 }
 
