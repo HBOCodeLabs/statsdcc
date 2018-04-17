@@ -153,14 +153,16 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
   this->prefix_stats = ::config->name;
 
   // Statsd metrics
-  if (ledger.statsd_metrics.find("metrics_processed") != ledger.statsd_metrics.end()) {
+  metrics_processed = ledger.statsd_metrics.find("metrics_processed")
+  if (metrics_processed != ledger.statsd_metrics.end()) {
     std::string processed_val =
-        std::to_string(static_cast<long long int>(ledger.statsd_metrics.find("metrics_processed")));
+        std::to_string(static_cast<long long int>(metrics_processed->second));
     this->send(this->prefix_stats + ".metrics_processed:" + processed_val + "|c");
   }
-  if (ledger.statsd_metrics.find("processing_time") != ledger.statsd_metrics.end()) {
+  processing_time = ledger.statsd_metrics.find("processing_time")
+  if (processing_time != ledger.statsd_metrics.end()) {
     std::string time_val =
-        std::to_string(static_cast<long long int>(ledger.statsd_metrics.find("processing_time")));
+        std::to_string(static_cast<long long int>(processing_time->second));
     this->send(this->prefix_stats + ".processing_time:" + time_val + "|ms");
   }
 
