@@ -154,12 +154,28 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
 
   // Statsd metrics
   if (ledger.statsd_metrics.find("metrics_processed") != ledger.statsd_metrics.end()) {
-    std::string processed_val = std::to_string(static_cast<long long int>(ledger.statsd_metrics["metrics_processed"]));
+    std::string processed_val =
+        std::to_string(static_cast<long long int>(ledger.statsd_metrics.find("metrics_processed")));
     this->send(this->prefix_stats + ".metrics_processed:" + processed_val + "|c");
   }
   if (ledger.statsd_metrics.find("processing_time") != ledger.statsd_metrics.end()) {
-    std::string time_val = std::to_string(static_cast<long long int>(ledger.statsd_metrics["processing_time"]));
+    std::string time_val =
+        std::to_string(static_cast<long long int>(ledger.statsd_metrics.find("processing_time")));
     this->send(this->prefix_stats + ".processing_time:" + time_val + "|ms");
+  }
+
+  for (auto statsd_metric_itr = ledger.statsd_metrics.cbegin();
+      statsd_metric_itr != ledger.statsd_metrics.cend();
+      ++statsd_metric_itr) {
+    std::string key = this->prefix_stats + '.' + statsd_metric_itr->first;
+
+    std::string value = std::to_string(
+      static_cast<long long int>(statsd_metric_itr->second));
+
+    stat_strings[this->hashring->get(key)] +=
+      key + " "
+          + value
+          + ts_suffix;
   }
 
 }
