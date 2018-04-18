@@ -148,6 +148,24 @@ void Repeater::flush_stats(const Ledger& ledger, int flusher_id) {
            std::to_string(static_cast<long long int>(value.size())) + "|s");
 
   }
+
+  // prefix for stats
+  this->prefix_stats = ::config->name;
+
+  // Statsd metrics
+  auto metrics_processed = ledger.statsd_metrics.find("metrics_processed");
+  if (metrics_processed != ledger.statsd_metrics.end()) {
+    std::string processed_val =
+        std::to_string(static_cast<long long int>(metrics_processed->second));
+    this->send(this->prefix_stats + ".metrics_processed:" + processed_val + "|c");
+  }
+  auto processing_time = ledger.statsd_metrics.find("processing_time");
+  if (processing_time != ledger.statsd_metrics.end()) {
+    std::string time_val =
+        std::to_string(static_cast<long long int>(processing_time->second));
+    this->send(this->prefix_stats + ".processing_time:" + time_val + "|ms");
+  }
+
 }
 
 }  // namespace backends
